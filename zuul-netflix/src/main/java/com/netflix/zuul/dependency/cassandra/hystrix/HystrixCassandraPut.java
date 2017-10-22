@@ -51,8 +51,8 @@ public class HystrixCassandraPut<RowKeyType> extends AbstractCassandraHystrixCom
     }
 
     public HystrixCassandraPut(Keyspace keyspace, String columnFamilyName, RowKeyType rowKey, Map<String, Object> attributes) {
-    	System.out.println("running HystrixCassandraPut ...");
         this(keyspace, columnFamilyName, rowKey, attributes, -1);
+        System.out.println("running HystrixCassandraPut ...");
     }
     @SuppressWarnings("unchecked")
     public HystrixCassandraPut(Keyspace keyspace, String columnFamilyName, RowKeyType rowKey, Map<String, Object> attributes, int ttlSeconds) {

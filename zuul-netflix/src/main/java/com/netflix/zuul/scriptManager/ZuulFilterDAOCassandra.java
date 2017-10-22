@@ -582,10 +582,6 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         @Override
         public void upsert(String rowKey, Map<String, Object> attributes) {
         	System.out.println("insert Put...");
-        	Rows<String, String> qt = cassandraGateway.select("select * from zuul_filters");
-            if (qt == null || qt.isEmpty()) {
-                System.out.println("upsert::qt is empty.");
-            }
         	
             new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
             System.out.println("insert Put completed");

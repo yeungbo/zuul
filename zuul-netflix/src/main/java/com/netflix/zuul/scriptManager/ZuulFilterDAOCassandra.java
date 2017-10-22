@@ -324,7 +324,9 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         attributes.put("filter_order", filter_order);
         attributes.put("application_name", ZuulApplicationInfo.getApplicationName());
 
+        System.out.println("upsert content:["+filter_id + "_" + revision+"] => "+ attributes);
         cassandraGateway.upsert(filter_id + "_" + revision, attributes);
+        System.out.println("insert done.");
         List<String> filterIds = getFilterIdsIndex(FILTER_ID + ZuulApplicationInfo.getApplicationName());
         if (!filterIds.contains(filter_id)) {
             addFilterIdToIndex(FILTER_ID + ZuulApplicationInfo.getApplicationName(), filter_id);
@@ -517,7 +519,9 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             HashMap<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("index_name", rowKey);
             attributes.put("filter_ids", filter_ids);
+            System.out.println("update filter index...");
             new HystrixCassandraPut<String>(keyspace, "zuul_filter_indices", rowKey, attributes).execute();
+            System.out.println("update filter index completed");
         }
 
         /**
@@ -528,7 +532,9 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
          */
         @Override
         public void upsert(String rowKey, Map<String, Object> attributes) {
+        	System.out.println("insert Put...");
             new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
+            System.out.println("insert Put completed");
         }
 
         /**
@@ -544,10 +550,12 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
 
         @Override
         public Rows<String, String> getByFilterIds(List<String> filterIds) {
+        	System.out.println("get filter Ids");
             String[] list = new String[filterIds.size()];
             for (int i = 0; i < filterIds.size(); i++) {
                 list[i] = filterIds.get(i);
             }
+            System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" list:"+list);
             return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();
         }
     }

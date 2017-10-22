@@ -601,7 +601,7 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         public void upsert(String rowKey, Map<String, Object> attributes) {
         	System.out.println("insert Put...");
         	System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" rowKey:"+rowKey+" attributes:"+attributes);
-        	Insert insertQuery = QueryBuilder.insertInto(keyspace, COLUMN_FAMILY);
+        	Insert insertQuery = QueryBuilder.insertInto((String)keyspace, COLUMN_FAMILY);
         	
             new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
             System.out.println("insert Put completed");

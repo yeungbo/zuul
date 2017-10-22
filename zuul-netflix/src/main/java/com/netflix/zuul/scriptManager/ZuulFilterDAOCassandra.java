@@ -587,12 +587,12 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             keyspace = context.getClient();
         }
 
+//        public CassandraGatewayProd(Keyspace keyspace) {
+//            this.keyspace = keyspace;
+//        }
+        
         public CassandraGatewayProd(Keyspace keyspace) {
             this.keyspace = keyspace;
-        }
-        
-        public CassandraGatewayProd(String keyspace) {
-//            this.keyspace = keyspace;
 
           
             // Establish long-lived Cassandra session

@@ -39,6 +39,8 @@ import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraGetRowsByQu
 import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraPut;
 import com.netflix.zuul.event.ZuulEvent;
 
+import ZuulFilterDAOCassandraDataStax.CassandraGatewayProd;
+
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ConsistencyLevel;
@@ -97,8 +99,6 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
     private final static String FILTER_ID = "FILTER_ID_";
 
     static Keyspace keyspace;
-    /** The session. */
-    private Session session;
 
     public static Keyspace getCassKeyspace() {
         return keyspace;
@@ -570,8 +570,21 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         private static final String COLUMN_FAMILY = "zuul_filters";
 
         private final Keyspace keyspace;
+        
+        /** The session. */
+        private Session session;
+        
+        /** The cluster. */
+        private Cluster cluster;
 
-
+        public void connect() {
+	        Cluster cluster = Cluster.builder()
+	                .withPort(9160)
+	                .addContactPoint("127.0.0.1")
+	                .build();
+	        session = cluster.connect("zuul_scripts");
+        }
+        
         public CassandraGatewayProd(AstyanaxContext<Keyspace> context) {
             keyspace = context.getClient();
         }
@@ -579,6 +592,14 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         public CassandraGatewayProd(Keyspace keyspace) {
             this.keyspace = keyspace;
         }
+        
+        public CassandraGatewayProd(String keyspace) {
+            this.keyspace = keyspace;
+
+          
+            // Establish long-lived Cassandra session
+            connect();
+          }
 
         @Override
         public void updateFilterIndex(String rowKey, String filter_ids) {

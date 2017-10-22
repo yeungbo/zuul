@@ -39,6 +39,22 @@ import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraGetRowsByQu
 import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraPut;
 import com.netflix.zuul.event.ZuulEvent;
 
+import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ConsistencyLevel;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
+import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Session.State;
+import com.datastax.driver.core.SimpleStatement;
+import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
+import com.datastax.driver.core.querybuilder.Delete;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.Select.Where;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -81,6 +97,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
     private final static String FILTER_ID = "FILTER_ID_";
 
     static Keyspace keyspace;
+    /** The session. */
+    private Session session;
 
     public static Keyspace getCassKeyspace() {
         return keyspace;
@@ -583,6 +601,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         public void upsert(String rowKey, Map<String, Object> attributes) {
         	System.out.println("insert Put...");
         	System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" rowKey:"+rowKey+" attributes:"+attributes);
+        	Insert insertQuery = QueryBuilder.insertInto(keyspace, COLUMN_FAMILY);
+        	
             new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
             System.out.println("insert Put completed");
         }

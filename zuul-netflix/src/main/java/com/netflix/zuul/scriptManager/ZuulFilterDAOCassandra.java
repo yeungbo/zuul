@@ -39,8 +39,6 @@ import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraGetRowsByQu
 import com.netflix.zuul.dependency.cassandra.hystrix.HystrixCassandraPut;
 import com.netflix.zuul.event.ZuulEvent;
 
-import ZuulFilterDAOCassandraDataStax.CassandraGatewayProd;
-
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ConsistencyLevel;
@@ -594,7 +592,7 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         }
         
         public CassandraGatewayProd(String keyspace) {
-            this.keyspace = keyspace;
+//            this.keyspace = keyspace;
 
           
             // Establish long-lived Cassandra session

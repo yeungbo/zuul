@@ -110,7 +110,56 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
 
     @Override
     public String getFilterIdsRaw(String index) {
+    	
+        Rows<String, String> qt = cassandraGateway.select("select * from zuul_scripts.zuul_filters");
+        if (qt == null || qt.isEmpty()) {
+            System.out.println("qt is empty.");
+        } else {
+
+            Iterator<Row<String, String>> rows = qt.iterator();
+            System.out.println("rows:"+rows);
+            if(rows!=null)
+            {
+                 System.out.println("rows is not null");
+                 if (rows.hasNext())
+                    System.out.println("rows has next");
+            }
+            while (rows.hasNext()) {
+                Row<String, String> row = rows.next();
+                System.out.println("row is:"+row);
+                ColumnList<String> columns = row.getColumns();
+                Iterator it = columns.getColumnNames().iterator();
+                String activename = "";
+                while (it.hasNext()){
+                     //Column c = it.next();
+                     String itname=(String)it.next();
+                     System.out.println("name: ["+itname+"]");
+                     if (itname.indexOf("active")>-1)
+                          activename = itname;
+                }
+                //System.out.println("colNames:"+columns.getColumnNames());
+                for(int i=0;i<columns.size();i++)
+                {
+                   System.out.println(columns.getColumnByIndex(i).getStringValue());
+
+                }
+
+                System.out.println("filterId:"+columns.getColumnByName("filter_id").getStringValue());
+//                System.out.println("filter_id:"+columns.getColumnByName("filter_id").getStringValue());
+                System.out.println("active:"+columns.getColumnByName(activename).getBooleanValue());
+
+            }
+
+        }
+
+        System.out.println("query completed.");
+
+                   
+    	
+    	
         Rows<String, String> result = cassandraGateway.select("select filter_ids from zuul_filter_indices where index_name = '" + index + "'");
+
+        System.out.println("query result:"+result);
         if (result == null || result.isEmpty()) {
             return "";
         } else {
@@ -533,6 +582,11 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         @Override
         public void upsert(String rowKey, Map<String, Object> attributes) {
         	System.out.println("insert Put...");
+        	Rows<String, String> qt = cassandraGateway.select("select * from zuul_filters");
+            if (qt == null || qt.isEmpty()) {
+                System.out.println("upsert::qt is empty.");
+            }
+        	
             new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
             System.out.println("insert Put completed");
         }

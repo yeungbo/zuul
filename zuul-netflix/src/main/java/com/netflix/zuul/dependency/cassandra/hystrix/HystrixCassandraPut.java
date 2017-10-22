@@ -51,6 +51,7 @@ public class HystrixCassandraPut<RowKeyType> extends AbstractCassandraHystrixCom
     }
 
     public HystrixCassandraPut(Keyspace keyspace, String columnFamilyName, RowKeyType rowKey, Map<String, Object> attributes) {
+    	System.out.println("running HystrixCassandraPut ...");
         this(keyspace, columnFamilyName, rowKey, attributes, -1);
     }
     @SuppressWarnings("unchecked")
@@ -74,6 +75,10 @@ public class HystrixCassandraPut<RowKeyType> extends AbstractCassandraHystrixCom
             for (String key : attributes.keySet()) {
                 Object o = attributes.get(key);
                 if (o != null) {
+                	
+                	 System.out.println("key: "+key);
+                     System.out.println("o: "+o);
+
                     // unfortunately the 'putColumn' method does not nicely figure out what type the Object is so we need to do it manually
                     if (o instanceof String) {
                         cm.putColumn(key, (String) o, ttlSeconds);
@@ -96,7 +101,10 @@ public class HystrixCassandraPut<RowKeyType> extends AbstractCassandraHystrixCom
                     }
                 }
             }
+            System.out.println("before execute, columnFamily:"+columnFamily+" rowKey:"+rowKey+" attributes:"+attributes);
+            System.out.println("cm:"+cm);
             m.execute();
+            System.out.println("after execute");
             return null;
         } catch (ConnectionException e) {
             throw e;

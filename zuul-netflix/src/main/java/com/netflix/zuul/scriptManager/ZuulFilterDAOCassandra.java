@@ -622,7 +622,25 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         	System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" rowKey:"+rowKey+" attributes:"+attributes);
         	Insert insertQuery = QueryBuilder.insertInto("zuul_scripts", COLUMN_FAMILY);
         	
-            new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
+        	 // Set filter columns/values
+            for (String key : attributes.keySet()) {
+              Object o = attributes.get(key);
+              if (o != null) {
+                if (o instanceof byte[]) {
+                  insertQuery.value(key, ByteBuffer.wrap((byte[]) o));
+                } else {
+                  insertQuery.value(key, o);
+                }
+              }
+            }
+
+            // Set consistency level
+            insertQuery.setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM);
+
+            // Execute Cassandra query
+            session.execute(insertQuery);
+            
+//            new HystrixCassandraPut<String>(keyspace, COLUMN_FAMILY, rowKey, attributes).execute();
             System.out.println("insert Put completed");
         }
 

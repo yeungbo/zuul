@@ -201,6 +201,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
                 try {
 //                    String filter_ids = row.getColumns().getColumnByName("filter_ids").getStringValue();
                     String filter_ids = row.getColumns().getColumnByName(fIdname).getStringValue();
+                    
+                    System.out.println("index filter_ids is: "+filter_ids);
                     if (filter_ids == null) return "";
                     return filter_ids;
                 } catch (Exception e) {

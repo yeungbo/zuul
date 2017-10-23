@@ -757,14 +757,63 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
 
         @Override
         public Rows<String, String> getByFilterIds(List<String> filterIds) {
-        	System.out.println("get filter Ids");
-            String[] list = new String[filterIds.size()];
+        	System.out.println("get by filter Ids");
+            /*String[] list = new String[filterIds.size()];
             for (int i = 0; i < filterIds.size(); i++) {
                 list[i] = filterIds.get(i);
             }
             System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" list:"+list);
-            return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();
+            return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();*/
+            
+            
+            
+            Rows<String, String> qt = cassandraGateway.select("select * from zuul_scripts.zuul_filters");
+            System.out.println("filter Ids:["+qt+"]");
+            return qt;
         }
+        
+        /*@Override
+        public List<Row> getByFilterIds(List<String> filterIdAndRevisions, boolean includeCode) {
+          // Parse primary/secondary keys
+          Map<String, List<Long>> filterIdToRevisionMap = new HashMap<String, List<Long>>();
+          for (String filterIdAndRevision : filterIdAndRevisions) {
+            String filterId = getFilterIdIndex(filterIdAndRevision);
+            Long revision = getRevisionIndex(filterIdAndRevision);
+            List<Long> revisionList = filterIdToRevisionMap.get(filterId);
+            if (revisionList == null) {
+              revisionList = new ArrayList<Long>();
+            }
+            revisionList.add(revision);
+            filterIdToRevisionMap.put(filterId, revisionList);
+          }
+
+          String selectFields =
+              "filter_id,filter_name,filter_type,revision,active,creation_date,canary,filter_order,application_name,filter_disable";
+          if (includeCode)
+            selectFields += ",filter_code";
+
+          Where query =
+              QueryBuilder.select(selectFields.split(",")).from(keyspace, TABLE_ZUUL_FILTERS)
+                  .where(in(FIELD_FILTER_ID, filterIdToRevisionMap.keySet().toArray()));
+
+          // Set consistency level
+          query.setConsistencyLevel(ConsistencyLevel.LOCAL_ONE);
+
+          // Execute Cassandra queries
+          List<Row> rows = new ArrayList<Row>();
+          ResultSet resultSet = session.execute(query);
+          if (resultSet != null) {
+            for (Row row : resultSet) {
+              String filterId = row.getString(FIELD_FILTER_ID);
+              Long revision = row.getLong(FIELD_REVISION);
+              String name = row.getString(FIELD_FILTER_NAME);
+              if (name != null && filterIdToRevisionMap.containsKey(filterId)
+                  && filterIdToRevisionMap.get(filterId).contains(revision))
+                rows.add(row);
+            }
+          }
+          return rows;
+        }*/
     }
 
 

@@ -760,15 +760,15 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         @Override
         public Rows<String, String> getByFilterIds(List<String> filterIds) {
         	System.out.println("get by filter Ids");
-            /*String[] list = new String[filterIds.size()];
+            String[] list = new String[filterIds.size()];
             for (int i = 0; i < filterIds.size(); i++) {
                 list[i] = filterIds.get(i);
             }
             System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" list:"+list);
-            return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();*/
+            return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();
             
-            String cql = "select * from zuul_scripts.zuul_filters";
-        	return new HystrixCassandraGetRowsByQuery<String>(keyspace, COLUMN_FAMILY, String.class, cql).execute();
+//            String cql = "select * from zuul_scripts.zuul_filters";
+//        	return new HystrixCassandraGetRowsByQuery<String>(keyspace, COLUMN_FAMILY, String.class, cql).execute();
 //            Rows<String, String> qt = cassandraGateway.select("select * from zuul_scripts.zuul_filters");
 //            System.out.println("filter Ids:["+qt+"]");
 //            return qt;

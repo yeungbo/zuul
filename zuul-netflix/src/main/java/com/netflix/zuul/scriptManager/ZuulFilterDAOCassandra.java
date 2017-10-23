@@ -188,16 +188,19 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
                 
                 ColumnList<String> columns = row.getColumns();
                 Iterator it = columns.getColumnNames().iterator();
-                
+                String fIdname = "";
                 while (it.hasNext()){
                      //Column c = it.next();
                      String itname=(String)it.next();
                      System.out.println("index name: ["+itname+"]");
+                     if (itname.indexOf("filter_ids")>-1)
+                    	 fIdname = itname;
                      
                 }
                 
                 try {
-                    String filter_ids = row.getColumns().getColumnByName("filter_ids").getStringValue();
+//                    String filter_ids = row.getColumns().getColumnByName("filter_ids").getStringValue();
+                    String filter_ids = row.getColumns().getColumnByName(fIdname).getStringValue();
                     if (filter_ids == null) return "";
                     return filter_ids;
                 } catch (Exception e) {

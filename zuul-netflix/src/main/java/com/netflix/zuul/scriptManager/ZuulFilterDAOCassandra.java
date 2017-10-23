@@ -580,7 +580,7 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         public void connect() {
 	        Cluster cluster = Cluster.builder()	                
 	                .addContactPoints("localhost")
-	                .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM))
+	                .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.ONE))
 	                .build();
 //	        Cluster cluster = new Cluster.Builder().addContactPoints("localhost").withPort(9160).build();
 	        session = cluster.connect("zuul_scripts");
@@ -639,7 +639,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             }
 
             // Set consistency level
-            insertQuery.setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM);
+//            insertQuery.setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM);
+            insertQuery.setConsistencyLevel(ConsistencyLevel.ONE);
 
             // Execute Cassandra query
             session.execute(insertQuery);

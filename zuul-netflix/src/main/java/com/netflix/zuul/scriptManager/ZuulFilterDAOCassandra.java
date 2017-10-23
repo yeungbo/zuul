@@ -98,6 +98,19 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
     private final static String SCRIPTS_FOR_FILTER = "FILTERSCRIPTS_";
     private final static String FILTER_ID = "FILTER_ID_";
 
+    private String name_filter_id="";
+    private String name_revision="";
+    private String name_active="";
+    private String name_application_name="";
+    private String name_canary="";
+    private String name_creation_date="";
+    private String name_filter_code="";
+    private String name_filter_disable="";
+    private String name_filter_name="";
+    private String name_filter_order="";
+    private String name_filter_type="";
+    
+    
     static Keyspace keyspace;
 
     public static Keyspace getCassKeyspace() {
@@ -152,8 +165,28 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
                      //Column c = it.next();
                      String itname=(String)it.next();
                      System.out.println("name: ["+itname+"]");
+                     if (itname.indexOf("filter_id")>-1)
+                    	 name_filter_id = itname;
+                     if (itname.indexOf("revision")>-1)
+                    	 name_revision = itname;
                      if (itname.indexOf("active")>-1)
-                          activename = itname;
+                    	 name_active = itname;
+                     if (itname.indexOf("application_name")>-1)
+                    	 name_application_name = itname;
+                     if (itname.indexOf("canary")>-1)
+                    	 name_canary = itname;
+                     if (itname.indexOf("creation_date")>-1)
+                    	 name_creation_date = itname;
+                     if (itname.indexOf("filter_code")>-1)
+                    	 name_filter_code = itname;
+                     if (itname.indexOf("filter_disable")>-1)
+                    	 name_filter_disable = itname;
+                     if (itname.indexOf("filter_name")>-1)
+                    	 name_filter_name = itname;
+                     if (itname.indexOf("filter_order")>-1)
+                    	 name_filter_order = itname;
+                     if (itname.indexOf("filter_type")>-1)
+                    	 name_filter_type = itname;
                 }
                 //System.out.println("colNames:"+columns.getColumnNames());
                 for(int i=0;i<columns.size();i++)

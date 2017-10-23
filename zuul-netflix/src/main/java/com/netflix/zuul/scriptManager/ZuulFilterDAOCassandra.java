@@ -55,6 +55,7 @@ import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select.Where;
+import com.datastax.oss.protocol.internal.request.query.QueryOptions;
 
 import org.junit.Before;
 import org.junit.Test;

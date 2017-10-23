@@ -278,6 +278,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             while (rows.hasNext()) {
                 Row<String, String> row = rows.next();
                 FilterInfo script = getFilterScriptFromCassandraRow(row);
+                
+                System.out.println("==========script==========\n"+script+"\n=================");
                 if (script != null) {
                     filterInfos.add(script);
                 }
@@ -765,11 +767,11 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             System.out.println("keyspace:"+keyspace+" COLUMN_FAMILY:"+COLUMN_FAMILY+" list:"+list);
             return new HystrixCassandraGetRowsByKeys<String>(keyspace, COLUMN_FAMILY, list).execute();*/
             
-            
-            
-            Rows<String, String> qt = cassandraGateway.select("select * from zuul_scripts.zuul_filters");
-            System.out.println("filter Ids:["+qt+"]");
-            return qt;
+            String cql = "select * from zuul_scripts.zuul_filters";
+        	return new HystrixCassandraGetRowsByQuery<String>(keyspace, COLUMN_FAMILY, String.class, cql).execute();
+//            Rows<String, String> qt = cassandraGateway.select("select * from zuul_scripts.zuul_filters");
+//            System.out.println("filter Ids:["+qt+"]");
+//            return qt;
         }
         
         /*@Override

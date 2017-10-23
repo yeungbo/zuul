@@ -577,10 +577,11 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         private Cluster cluster;
 
         public void connect() {
-	        Cluster cluster = new Cluster.builder()	                
+	        /*Cluster cluster = new Cluster.builder()	                
 	                .addContactPoints("localhost")
 	                .withPort(9160)
-	                .build();
+	                .build();*/
+	        Cluster cluster = new Cluster.Builder().addContactPoints("localhost").withPort(9160).build();
 	        session = cluster.connect("zuul_scripts");
         }
         

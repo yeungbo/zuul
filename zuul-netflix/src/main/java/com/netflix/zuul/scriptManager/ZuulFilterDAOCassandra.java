@@ -195,9 +195,9 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
 
                 }
 
-                System.out.println("filterId:"+columns.getColumnByName("filter_id").getStringValue());
-//                System.out.println("filter_id:"+columns.getColumnByName("filter_id").getStringValue());
-                System.out.println("active:"+columns.getColumnByName(activename).getBooleanValue());
+                System.out.println("filterId:"+columns.getColumnByName(name_filter_id).getStringValue());
+                System.out.println("application_name:"+columns.getColumnByName(name_application_name).getStringValue());
+                System.out.println("active:"+columns.getColumnByName(name_active).getBooleanValue());
 
             }
 
@@ -397,17 +397,17 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         try {
             ColumnList<String> columns = row.getColumns();
 
-            filterName = columns.getColumnByName("filter_name").getStringValue();
-            String filter_id = columns.getColumnByName("filter_id").getStringValue();
-            String filterType = columns.getColumnByName("filter_type").getStringValue();
-            String filterDisable = columns.getColumnByName("filter_disable") != null ? columns.getColumnByName("filter_disable").getStringValue() : "?";
-            String filterOrder = columns.getColumnByName("filter_order") != null ? columns.getColumnByName("filter_order").getStringValue() : "?";
-            revision = (int) columns.getColumnByName("revision").getLongValue();
-            boolean isActive = columns.getColumnByName("active").getBooleanValue();
-            boolean isCanary = columns.getColumnByName("canary").getBooleanValue();
-            Date creationDate = columns.getColumnByName("creation_date").getDateValue();
-            String filterCode = new String(columns.getColumnByName("filter_code").getByteArrayValue());
-            String application_name = columns.getColumnByName("application_name").getStringValue();
+            filterName = columns.getColumnByName(name_filter_name).getStringValue();
+            String filter_id = columns.getColumnByName(name_filter_id).getStringValue();
+            String filterType = columns.getColumnByName(name_filter_type).getStringValue();
+            String filterDisable = columns.getColumnByName(name_filter_disable) != null ? columns.getColumnByName(name_filter_disable).getStringValue() : "?";
+            String filterOrder = columns.getColumnByName(name_filter_order) != null ? columns.getColumnByName(name_filter_order).getStringValue() : "?";
+            revision = (int) columns.getColumnByName(name_revision).getLongValue();
+            boolean isActive = columns.getColumnByName(name_active).getBooleanValue();
+            boolean isCanary = columns.getColumnByName(name_canary).getBooleanValue();
+            Date creationDate = columns.getColumnByName(name_creation_date).getDateValue();
+            String filterCode = new String(columns.getColumnByName(name_filter_code).getByteArrayValue());
+            String application_name = columns.getColumnByName(name_application_name).getStringValue();
 
             FilterInfo filterInfo = new FilterInfo(filter_id, revision, creationDate, isActive, isCanary, filterCode, filterType, filterName, filterDisable, filterOrder, application_name);
             return filterInfo;

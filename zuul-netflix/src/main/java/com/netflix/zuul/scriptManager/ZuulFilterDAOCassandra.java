@@ -582,8 +582,8 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
 	                .withPort(9160)
 	                .build();*/
 	        Cluster cluster = new Cluster.Builder().addContactPoints("localhost").withPort(9160).build();
-//	        session = cluster.connect("zuul_scripts");
-	        session = cluster.connect();
+	        session = cluster.connect("zuul_scripts");
+//	        session = cluster.connect();
         }
         
         public CassandraGatewayProd(AstyanaxContext<Keyspace> context) {

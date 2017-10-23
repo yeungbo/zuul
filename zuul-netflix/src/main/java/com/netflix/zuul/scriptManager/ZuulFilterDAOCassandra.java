@@ -580,7 +580,7 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         public void connect() {
 	        Cluster cluster = Cluster.builder()	                
 	                .addContactPoints("localhost")
-	                .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.ONE))
+	                .withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM))
 	                .build();
 //	        Cluster cluster = new Cluster.Builder().addContactPoints("localhost").withPort(9160).build();
 	        session = cluster.connect("zuul_scripts");

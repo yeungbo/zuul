@@ -176,7 +176,7 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
     	
     	
         Rows<String, String> result = cassandraGateway.select("select filter_ids from zuul_filter_indices where index_name = '" + index + "'");
-
+        System.out.println("query sql: "+"select filter_ids from zuul_filter_indices where index_name = '" + index + "'");
         System.out.println("query result:"+result);
         if (result == null || result.isEmpty()) {
             return "";
@@ -184,6 +184,18 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             Iterator<Row<String, String>> iterator = result.iterator();
             if (iterator.hasNext()) {
                 Row<String, String> row = iterator.next();
+                
+                
+                ColumnList<String> columns = row.getColumns();
+                Iterator it = columns.getColumnNames().iterator();
+                
+                while (it.hasNext()){
+                     //Column c = it.next();
+                     String itname=(String)it.next();
+                     System.out.println("index name: ["+itname+"]");
+                     
+                }
+                
                 try {
                     String filter_ids = row.getColumns().getColumnByName("filter_ids").getStringValue();
                     if (filter_ids == null) return "";

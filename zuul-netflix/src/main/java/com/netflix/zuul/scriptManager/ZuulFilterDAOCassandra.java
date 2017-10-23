@@ -576,6 +576,13 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
         
         /** The cluster. */
         private Cluster cluster;
+        
+
+        private PreparedStatement selectFilterIdsStatement;
+
+        private PreparedStatement updateFilterIndexStatement;
+
+        private PreparedStatement updateFilterWithTtlStatement;
 
         public void connect() {
 	        Cluster cluster = Cluster.builder()	                
@@ -610,8 +617,46 @@ public class ZuulFilterDAOCassandra extends Observable implements ZuulFilterDAO 
             attributes.put("index_name", rowKey);
             attributes.put("filter_ids", filter_ids);
             System.out.println("update filter index...");
-            new HystrixCassandraPut<String>(keyspace, "zuul_filter_indices", rowKey, attributes).execute();
-            System.out.println("update filter index completed");
+            System.out.println("keyspace:"+keyspace+" filter_ids:"+filter_ids+" rowKey:"+rowKey+" attributes:"+attributes);
+
+            Insert insertQuery = QueryBuilder.insertInto("zuul_scripts", "zuul_filter_indices");
+       	 // Set filter columns/values
+            for (String key : attributes.keySet()) {
+              Object o = attributes.get(key);
+              if (o != null) {
+                if (o instanceof byte[]) {
+                  insertQuery.value(key, ByteBuffer.wrap((byte[]) o));
+                } else {
+                  insertQuery.value(key, o);
+                }
+              }
+            }
+            
+            
+            insertQuery.setConsistencyLevel(ConsistencyLevel.ONE);
+
+            // Execute Cassandra query
+            session.execute(insertQuery);
+            
+            
+//            new HystrixCassandraPut<String>(keyspace, "zuul_filter_indices", rowKey, attributes).execute();
+           
+           /* 
+            
+            logger.info("inserting into "+keyspace+"."+TABLE_ZUUL_FILTER_INDICES+" "+rowKey+" "+filter_ids);
+
+            updateFilterIndexStatement =
+                session.prepare("INSERT INTO " + keyspace + "." + TABLE_ZUUL_FILTER_INDICES
+                    + " (index_name, service_owner, filter_ids) values (?, ?, ?)");
+            updateFilterIndexStatement.setConsistencyLevel(ConsistencyLevel.LOCAL_QUORUM);
+          //}
+          BoundStatement boundStatementIndexNames =
+              new BoundStatement((PreparedStatement) updateFilterIndexStatement);
+
+          // Execute Cassandra query
+          session.execute(boundStatementIndexNames.bind(rowKey, "common", filter_ids));*/
+          
+          System.out.println("update filter index completed");
         }
 
         /**
